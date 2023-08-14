@@ -5,4 +5,7 @@ The original subscribe is from another youtuber: https://www.youtube.com/@Franks
 
 There also have codepen demos to show the effect
 
-- lines -> [Lines Lab 1](https://codepen.io/likunlin/pen/WNYYmBb)
+- lines 
+	- [Starter Lines](https://codepen.io/likunlin/pen/WNYYmBb)
+- particles 
+	- [Starter Particles](https://codepen.io/likunlin/pen/JjegrRR)
