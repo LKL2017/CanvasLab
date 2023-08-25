@@ -9,3 +9,4 @@ There also have codepen demos to show the effect
 	- [Starter Lines](https://codepen.io/likunlin/pen/WNYYmBb)
 - particles 
 	- [Starter Particles](https://codepen.io/likunlin/pen/JjegrRR)
+    - [Connect Particles](https://codepen.io/likunlin/pen/QWzjgNm)
