@@ -14,20 +14,18 @@ ctx.strokeStyle = 'white';
 class Particle {
   constructor(effect) {
     this.canvas = effect.canvas;
-    this.radius = Math.random() * 12 + 6;
+    this.radius = Math.random() * 8 + 4;
     this.x = Math.random() * (this.canvas.width - 2 * this.radius) + this.radius;
     this.y = Math.random() * (this.canvas.height - 2 * this.radius) + this.radius;
-    this.vx = Math.random() * 4;
-    this.vy = Math.random() * 4;
-
-    this.draw(effect.ctx);
+    this.vx = Math.random();
+    this.vy = Math.random();
   }
 
   draw(context) {
     context.beginPath();
     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
     context.fill();
-    context.stroke();
+    // context.stroke();
   }
 
   update() {
@@ -44,7 +42,7 @@ class Effect {
     this.canvas = canvas;
     this.ctx = this.canvas.getContext('2d');
     this.particles = [];
-    this.numOfPartilces = 30;
+    this.numOfPartilces = 100;
     this.maxDistance = 240;
   }
 
@@ -56,12 +54,15 @@ class Effect {
 
   renderParticles () {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-		this.particles.forEach(particle => particle.update());
     this.drawConnection();
-    this.particles.forEach(particle => particle.draw(this.ctx));
+    this.particles.forEach(particle => {
+      particle.update();
+      particle.draw(this.ctx)
+    });
+    // this.particles.forEach(particle => particle.draw(this.ctx));
   }
 
-  drawConnection(maxD) {
+  drawConnection() {
     for(let i = 0; i < this.particles.length; i++) {
       for(let j = i; j < this.particles.length; j++) {
         const first = this.particles[i];
@@ -71,6 +72,11 @@ class Effect {
         const distance = Math.hypot(dx, dy);
         if (distance < this.maxDistance) {
           this.ctx.save();
+
+          // if we don't invoke beginPath(),
+          // the globalAlpha will not work and there is somehow an obvious frame drop on screen
+          this.ctx.beginPath();
+
           this.ctx.globalAlpha = 1 - distance / this.maxDistance;
           this.ctx.moveTo(first.x, first.y);
           this.ctx.lineTo(second.x, second.y);
