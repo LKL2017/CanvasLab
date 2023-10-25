@@ -10,3 +10,7 @@ There also have codepen demos to show the effect
 - particles 
 	- [Starter Particles](https://codepen.io/likunlin/pen/JjegrRR)
     - [Connect Particles](https://codepen.io/likunlin/pen/QWzjgNm)
+- flow-fields
+	- [Starter Fields](https://codepen.io/likunlin/pen/YzBXGpz)
+- pixels
+ 	- [Pixel Transform](https://codepen.io/likunlin/pen/KKJpgaZ)  
