@@ -37,6 +37,13 @@ window.onload = () => {
 
       this.particles = [];
       this.gap = 10;
+
+      this.mouse = {
+        radius: 4000,
+        x: undefined,
+        y: undefined
+      }
+      this.bindEvent();
     }
     init() {
       this.context.drawImage(img, this.width / 2 - img.width / 2, this.height / 2 - img.height / 2, img.width, img.height);
@@ -62,6 +69,24 @@ window.onload = () => {
         p.update();
         p.draw();
       });
+    }
+
+    bindEvent() {
+      window.addEventListener('mousemove', evt => {
+        this.particles.forEach(p => {
+          const dx = p.x - evt.x;
+          const dy = p.y - evt.y;
+          const ratio = (dx * dx + dy * dy) / this.mouse.radius;
+          if (ratio < 1) {
+            // const force = -ratio;
+            const theta = Math.atan2(dy, dx);
+            const vx = Math.cos(theta);
+            const vy = Math.sin(theta);
+            p.x += vx;
+            p.y += vy;
+          }
+        })
+      })
     }
   }
 
