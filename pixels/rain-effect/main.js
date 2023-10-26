@@ -11,19 +11,26 @@ window.onload = () => {
       this.context = effect.context;
       this.x = Math.random() * effect.width;
       this.y = 0;
-      this.size = Math.random() + 1;
-      this.velocity = 1;
+      this.size = Math.random() * 0.5 + 1;
 
-      this.vx = 0;
-      this.vy = Math.random() * 2;
+      this.velocity = Math.random() * 2;
+      this.speed = 1;
+      this.color = 'white';
+    }
+
+    get vy () {
+      return this.velocity + (2.5 - this.speed);
     }
 
     update() {
       if (this.y > this.effect.height) {
         this.y = 0;
+        this.x = Math.random() * this.effect.width;
       }
-      this.velocity = this.effect.brightnessArr[Math.floor(this.y)][Math.floor(this.x)];
-      this.y += this.vy + (1 - this.velocity) * 3;
+      const pixelInfo = this.effect.brightnessArr[Math.floor(this.y)][Math.floor(this.x)];
+      this.speed = pixelInfo.brightness;
+      this.color = pixelInfo.color;
+      this.y += this.vy;
     }
 
     draw() {
@@ -57,7 +64,10 @@ window.onload = () => {
           const green = pixelsData[pixelIndex + 1];
           const blue = pixelsData[pixelIndex + 2];
           const alpha = pixelsData[pixelIndex + 3];
-          row.push(this.calcRelativeBrightness(red, green, blue))
+          row.push({
+            brightness: this.calcRelativeBrightness(red, green, blue),
+            color: `rgb(${red},${green},${blue})`
+          })
         }
         this.brightnessArr.push(row);
       }
@@ -70,12 +80,14 @@ window.onload = () => {
     }
 
     calcRelativeBrightness(r, g, b) {
-      return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      return Math.sqrt(0.299 * r * r + 0.587 * g * g + 0.114 * b * b) / 100;
     }
 
     render() {
       this.particles.forEach(p => {
         p.update();
+        this.context.globalAlpha = p.speed * 0.5;
+        this.context.fillStyle = p.color;
         p.draw();
       })
     }
