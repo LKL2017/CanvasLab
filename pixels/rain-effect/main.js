@@ -27,7 +27,7 @@ window.onload = () => {
         this.y = 0;
         this.x = Math.random() * this.effect.width;
       }
-      const pixelInfo = this.effect.brightnessArr[Math.floor(this.y)][Math.floor(this.x)];
+      const pixelInfo = this.effect.brightnessArr[Math.floor(this.y / this.effect.gap)][Math.floor(this.x / this.effect.gap)];
       this.speed = pixelInfo.brightness;
       this.color = pixelInfo.color;
       this.y += this.vy;
@@ -45,7 +45,8 @@ window.onload = () => {
       this.context = context;
       this.width = width;
       this.height = height;
-      this.numOfParticles = 5000;
+      this.gap = 2;
+      this.numOfParticles = 2000;
       this.particles = [];
       this.brightnessArr = [];
     }
@@ -53,17 +54,16 @@ window.onload = () => {
     init() {
       this.context.drawImage(img, 0, 0, img.width, img.height);
       const pixelsData = this.context.getImageData(0, 0, img.width, img.height).data;
-      // this.context.clearRect(0, 0, img.width, img.height);
+      this.context.clearRect(0, 0, img.width, img.height);
       this.context.fillStyle = 'white';
 
-      for (let y = 0; y < img.height; y++) {
+      for (let y = 0; y < img.height; y+=this.gap) {
         let row = [];
-        for (let x = 0; x < img.width; x++) {
+        for (let x = 0; x < img.width; x+=this.gap) {
           const pixelIndex = (y * img.width + x) * 4;
           const red = pixelsData[pixelIndex];
           const green = pixelsData[pixelIndex + 1];
           const blue = pixelsData[pixelIndex + 2];
-          const alpha = pixelsData[pixelIndex + 3];
           row.push({
             brightness: this.calcRelativeBrightness(red, green, blue),
             color: `rgb(${red},${green},${blue})`
@@ -72,7 +72,6 @@ window.onload = () => {
         this.brightnessArr.push(row);
       }
 
-      this.context.globalAlpha = 0.3;
       this.particles = new Array(this.numOfParticles).fill('').map(_ => {
         return new Particle(this)
       })
@@ -97,7 +96,13 @@ window.onload = () => {
   effect.init();
 
   function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // not clearing here and setting a background makes the particles 'fade out', that's amazing
+    effect.context.globalAlpha = 0.02;
+    effect.context.fillStyle = 'black';
+    effect.context.fillRect(0, 0, effect.width, effect.height);
+    effect.context.globalAlpha = 0.2;
+    // ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     effect.render();
     requestAnimationFrame(animate)
   }
